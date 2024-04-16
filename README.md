@@ -1,30 +1,77 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+# Librería de Libros
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Esta aplicación es una librería de libros donde los usuarios pueden buscar libros, filtrarlos por género y autor, y agregarlos a una lista de favoritos.
 
-## Expanding the ESLint configuration
+## Características
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Buscar libros por título
+- Filtrar libros por género y autor
+- Agregar y quitar libros de favoritos
+- Mostrar una lista de libros favoritos en un aside
 
-- Configure the top-level `parserOptions` property like this:
+## Tecnologías utilizadas
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- React
+- Redux Toolkit
+- TypeScript
+- Tailwind CSS
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Estructura del proyecto
+  - `components/`
+    - `BooksCard.tsx`: Componente principal que muestra la lista de libros y los controles de búsqueda y filtros.
+    - `favoriteBooks.tsx`: Componente que muestra la lista de libros favoritos en un aside.
+  - `hooks/`
+    - `booksActions.ts`: Acciones para agregar y quitar libros de favoritos.
+    - `useBooks.ts`: Hook personalizado para obtener datos de libros del store.
+  - `interfaces/`
+    - `books.ts`: Define la interfaz del libro.
+  - `public/`
+    - `images/`: Carpeta que contiene las imágenes utilizadas en la aplicación.
+  - `redux/`
+    - `slice/`: Contiene el slice de Redux con el estado y las acciones relacionadas con los libros y favoritos.
+
+## Configuración y Uso
+
+1. **Instalación de dependencias**
+    ```bash
+    npm install
+    ```
+
+2. **Ejecutar la aplicación en modo desarrollo**
+    ```bash
+    npm start
+    ```
+
+3. **Construir la aplicación para producción**
+    ```bash
+    npm run build
+    ```
+
+## Desarrollo
+
+Para contribuir al desarrollo de esta aplicación:
+
+1. Clona el repositorio
+    ```bash
+    git clone https://github.com/tu-usuario/libreria-libros.git
+    ```
+
+2. Crea una nueva rama para tu funcionalidad
+    ```bash
+    git checkout -b feature/nueva-funcionalidad
+    ```
+
+3. Haz tus cambios y realiza un commit
+    ```bash
+    git commit -m "Agrega nueva funcionalidad"
+    ```
+
+4. Sube tus cambios
+    ```bash
+    git push origin feature/nueva-funcionalidad
+    ```
+
+5. Abre un Pull Request en GitHub
