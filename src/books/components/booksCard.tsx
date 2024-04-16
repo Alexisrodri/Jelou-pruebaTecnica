@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { logoLetter, menuOpen, search } from '../../public/images';
-import { useAppSelector, useAppDispatch } from "../hooks/store";
-import { addFavoriteBook, removeFavoriteBook } from '../slice/slice';
+import { logoLetter, search } from '../../public/images';
+import { useAppSelector } from "../hooks/store";
+// import { addFavoriteBook, removeFavoriteBook } from '../slice/slice';
 import { Book } from '../interfaces/books';
+import { BooksActions } from '../hooks/booksActions';
+import Aside from './favoriteBooks';
 
 const generos = ['Terror', 'Ciencia ficción', 'Zombies', 'Fantasía'];
 const autores = [
@@ -22,21 +24,25 @@ const autores = [
 ];
 
 const BooksCard = () => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
+  const { setFavoriteBook, setRemoveBook } = BooksActions()
   const bookRedux = useAppSelector((state) => state.books.data);
   const booksFavorite = useAppSelector((state) => state.books.favoriteBooks);
   const [searchTerm, setSearchTerm] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [selectedGeneros, setSelectedGeneros] = useState<string[]>([]);
   const [selectedAutores, setSelectedAutores] = useState<string[]>([]);
+  const [isAsideOpen, setIsAsideOpen] = useState(false);
 
-  const filteredBooks = bookRedux.filter((book) => {
-    const matchesTitle = book.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenero = selectedGeneros.length === 0 || selectedGeneros.includes(book.genre);
-    const matchesAutor = selectedAutores.length === 0 || selectedAutores.includes(book.author.name);
+  const filteredBooks = bookRedux
+    ? bookRedux.filter((book) => {
+      const matchesTitle = book.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesGenero = selectedGeneros.length === 0 || selectedGeneros.includes(book.genre);
+      const matchesAutor = selectedAutores.length === 0 || selectedAutores.includes(book.author.name);
 
-    return matchesTitle && matchesGenero && matchesAutor;
-  });
+      return matchesTitle && matchesGenero && matchesAutor;
+    })
+    : [];
 
   const handleFilterChange = (filter: string, type: 'genero' | 'autor') => {
     if (type === 'genero') {
@@ -55,17 +61,25 @@ const BooksCard = () => {
   };
 
   const handleToggleFavorite = (book: Book) => {
-    if (booksFavorite.some((favBook) => favBook.ISBN === book.ISBN)) {
-      dispatch(removeFavoriteBook(book.ISBN));
+    console.log("handleToggleFavorite called"); // Debugging
+
+    const isFavorite = booksFavorite
+      ? booksFavorite.some((favBook) => favBook.ISBN === book.ISBN)
+      : false;
+
+    if (isFavorite) {
+      console.log("Removing from favorites"); // Debugging
+      setRemoveBook(book.ISBN);
     } else {
-      dispatch(addFavoriteBook(book));
+      console.log("Adding to favorites"); // Debugging
+      setFavoriteBook(book);
+      setIsAsideOpen(true); // Abrir el aside cuando se agrega un libro a favoritos
     }
   };
 
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
   };
-
 
   const clearFilters = () => {
     setSelectedGeneros([]);
@@ -76,12 +90,6 @@ const BooksCard = () => {
     <>
       <nav className="text-black pr-8">
         <div className="container mx-auto flex flex-wrap justify-between items-center">
-
-          <div className='flex items-center sm:hidden'>
-            <button>
-              <img src={menuOpen} />
-            </button>
-          </div>
 
           <img src={logoLetter} alt="Librería" className="h-20 hidden sm:block" />
 
@@ -157,12 +165,18 @@ const BooksCard = () => {
           </div>
         }
 
+        <button onClick={() => setIsAsideOpen(!isAsideOpen)} className="fixed right-4 top-4 z-10 text-white p-2 rounded-full shadow-md">
+          {isAsideOpen ? '❌' : '❤️'}
+        </button>
+
+        {isAsideOpen && <Aside />}
+
         {searchTerm !== '' || filteredBooks
           ?
           <>
-            {filteredBooks.map((book, index) => (
+            {filteredBooks.map((book) => (
               <article
-                key={index}
+                key={book.ISBN}
                 className="p-4 h-full flex flex-col justify-between cursor-pointer hover:opacity-40 transition-opacity duration-500 ease-in-out"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -190,12 +204,10 @@ const BooksCard = () => {
           bookRedux.map((book) => (
             <article
               key={book.ISBN}
-              className="p-4 h-full flex flex-col justify-between cursor-pointer hover:opacity-30 transition-opacity duration-500 ease-in-out"
+              className="p-4 h-full flex flex-col justify-between cursor-pointer hover:opacity-30  transition-opacity duration-500 ease-in-out"
               onClick={(e) => {
-                e.stopPropagation();
-                // handleBookClick(book)
+                e.preventDefault()
                 handleToggleFavorite(book)
-
               }}
             >
               <div className="bg-white rounded-lg overflow-hidden shadow-md flex flex-grow flex-col">
