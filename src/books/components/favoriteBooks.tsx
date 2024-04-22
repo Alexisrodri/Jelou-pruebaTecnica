@@ -11,7 +11,7 @@ const Aside = () => {
   };
 
   return (
-    <aside className="fixed right-0 top-0 h-screen bg-white w-1/4 shadow-lg overflow-y-auto">
+    <aside className="fixed sm:right-2  right-0  top-0 h-screen bg-white w-full md:w-1/4 shadow-lg overflow-y-auto">
       <div className="p-4">
         <h2 className="text-xl font-semibold mb-4">Libros favoritos</h2>
         {booksFavorite.length === 0 ? (

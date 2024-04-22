@@ -165,7 +165,10 @@ const BooksCard = () => {
           </div>
         }
 
-        <button onClick={() => setIsAsideOpen(!isAsideOpen)} className="fixed right-4 top-4 z-10 text-white p-2 rounded-full shadow-md">
+        <button
+          onClick={() => setIsAsideOpen(!isAsideOpen)}
+          className="fixed right-4 top-4 z-10 text-white p-2 rounded-full shadow-md sm:hidden"
+        >
           {isAsideOpen ? '❌' : '❤️'}
         </button>
 
